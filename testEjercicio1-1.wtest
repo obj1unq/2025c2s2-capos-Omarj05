@@ -1,0 +1,15 @@
+import capos.*
+
+test "caso de prueba : tamaño de la mochila" {
+    rolando.recolectarArtefacto(espadaDelDestino)
+    assert.equals(#{espadaDelDestino}, rolando.mochila())
+    
+    
+    rolando.recolectarArtefacto(libroDeHechizos)
+    assert.equals(#{espadaDelDestino, libroDeHechizos}, rolando.mochila())
+
+    assert.throwsException({rolando.recolectarArtefacto(collarDivino)})
+
+    assert.equals(#{espadaDelDestino, libroDeHechizos}, rolando.mochila())
+
+}
