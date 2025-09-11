@@ -13,3 +13,24 @@ test "caso de prueba : tamaño de la mochila" {
     assert.equals(#{espadaDelDestino, libroDeHechizos}, rolando.mochila())
 
 }
+
+test "caso de prueba : guardar objetos en el castillo de piedra" {
+    rolando.recolectarArtefacto(espadaDelDestino)
+    rolando.recolectarArtefacto(libroDeHechizos)
+
+    rolando.irAlCastillo()
+    assert.equals(#{}, rolando.mochila())
+    assert.equals(
+        #{espadaDelDestino, libroDeHechizos}, 
+        castilloDePiedra.artefactosAlmacenados())
+
+    rolando.recolectarArtefacto(collarDivino)
+    assert.equals(#{collarDivino}, rolando.mochila())
+
+    rolando.irAlCastillo()
+    assert.equals(#{}, rolando.mochila())
+    assert.equals(
+        #{espadaDelDestino, libroDeHechizos, collarDivino}, 
+        castilloDePiedra.artefactosAlmacenados())
+}
+

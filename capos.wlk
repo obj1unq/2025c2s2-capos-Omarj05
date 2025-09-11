@@ -9,15 +9,28 @@ object rolando {
 
     method capacidadMochila(tamaño) { capacidadMochila = tamaño }
 
-    method mochila() {
-        return mochila
-    }
+    method mochila() { return mochila }
 
     method validarRecoleccion() {
         if (mochila.size() == capacidadMochila) {
             self.error("La mochila está llena.")
         }
     }
+
+    method irAlCastillo() {
+        castilloDePiedra.guardarObjetos(mochila)
+        mochila.clear()
+    }
+}
+
+object castilloDePiedra {
+    var artefactosAlmacenados = #{}
+
+    method guardarObjetos(conjunto) {
+        artefactosAlmacenados = artefactosAlmacenados + conjunto
+    }
+
+    method artefactosAlmacenados() { return artefactosAlmacenados }
 }
 
 object espadaDelDestino {
@@ -31,3 +44,4 @@ object collarDivino {
 
 object armaduraDeAceroValkyrio {
 }
+
