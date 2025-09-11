@@ -1,6 +1,7 @@
 object rolando {
     const mochila = #{}
     var capacidadMochila = 2
+    var casa = castilloDePiedra //es bueno tener como una seleccion para ciertas cosas
 
     method recolectarArtefacto(artefacto) {
         self.validarRecoleccion()
@@ -17,9 +18,20 @@ object rolando {
         }
     }
 
-    method irAlCastillo() {
-        castilloDePiedra.guardarObjetos(mochila)
+    method casa(_casa) { casa = _casa }
+
+
+    method irACasa() {
+        casa.guardarObjetos(mochila) // evitar referencias globales y dar todo por parametro (sobrediseño)
         mochila.clear()
+    }
+
+    method todasLasPosesiones() {
+        return mochila + casa.artefactosAlmacenados()
+    }
+
+    method tieneArtefacto(artefacto) {
+        return self.todasLasPosesiones().contains(artefacto)
     }
 }
 
@@ -31,7 +43,8 @@ object castilloDePiedra {
     }
 
     method artefactosAlmacenados() { return artefactosAlmacenados }
-}
+ 
+ }
 
 object espadaDelDestino {
 }

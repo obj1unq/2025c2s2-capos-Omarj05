@@ -18,7 +18,7 @@ test "caso de prueba : guardar objetos en el castillo de piedra" {
     rolando.recolectarArtefacto(espadaDelDestino)
     rolando.recolectarArtefacto(libroDeHechizos)
 
-    rolando.irAlCastillo()
+    rolando.irACasa()
     assert.equals(#{}, rolando.mochila())
     assert.equals(
         #{espadaDelDestino, libroDeHechizos}, 
@@ -27,10 +27,25 @@ test "caso de prueba : guardar objetos en el castillo de piedra" {
     rolando.recolectarArtefacto(collarDivino)
     assert.equals(#{collarDivino}, rolando.mochila())
 
-    rolando.irAlCastillo()
+    rolando.irACasa()
     assert.equals(#{}, rolando.mochila())
     assert.equals(
         #{espadaDelDestino, libroDeHechizos, collarDivino}, 
         castilloDePiedra.artefactosAlmacenados())
 }
 
+test "caso de prueba : posesiones de rolando y buscar artefacto" {
+    rolando.recolectarArtefacto(espadaDelDestino)
+    rolando.recolectarArtefacto(libroDeHechizos)
+    rolando.irACasa()
+    
+    assert.equals(#{espadaDelDestino, libroDeHechizos}, castilloDePiedra.artefactosAlmacenados())
+    assert.equals(#{}, rolando.mochila())
+    assert.that(rolando.tieneArtefacto(espadaDelDestino))
+    assert.that(rolando.tieneArtefacto(libroDeHechizos))
+
+    rolando.recolectarArtefacto(collarDivino)
+    rolando.irACasa()
+    assert.equals(#{espadaDelDestino, libroDeHechizos, collarDivino}, rolando.todasLasPosesiones())
+    
+}
