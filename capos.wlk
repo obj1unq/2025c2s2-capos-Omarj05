@@ -1,7 +1,7 @@
 object rolando {
     const mochila = #{}
     var property capacidadMochila = 2
-    var casa = castilloDePiedra //es bueno tener como una seleccion para ciertas cosas
+    var property casa = castilloDePiedra //es bueno tener como una seleccion para ciertas cosas
     const artefactosEncontrados = []
     var property poderBase = 5
     var batallas = 0
@@ -21,13 +21,13 @@ object rolando {
 
     method encontrarArtefacto(artefacto) {
         artefactosEncontrados.add(artefacto)
-        artefacto.portador(self)
 
         self.recolectarArtefacto(artefacto)
     }
 
     method recolectarArtefacto(artefacto) {
         if (self.mochila().size() < self.capacidadMochila()) {
+            artefacto.portador(self)
             mochila.add(artefacto)
         }
     }
@@ -36,11 +36,10 @@ object rolando {
 
     method mochila() { return mochila }
 
-    method casa(_casa) { casa = _casa }
     method batallas() { return batallas }
 
     method irACasa() {
-        casa.guardarObjetos(mochila) // evitar referencias globales y dar todo por parametro (sobrediseño)
+        casa.guardarArtefactos(mochila) // evitar referencias globales y dar todo por parametro (sobrediseño)
         mochila.clear()
     }
 
@@ -51,17 +50,24 @@ object rolando {
     method tieneArtefacto(artefacto) {
         return self.todasLasPosesiones().contains(artefacto)
     }
+
+    method artefactoMasPoderosoEnPosesion() {
+        return casa.artefactoMasPoderoso()
+    }
 }
 
 object castilloDePiedra {
     var artefactosAlmacenados = #{}
 
-    method guardarObjetos(conjunto) {
+    method guardarArtefactos(conjunto) {
         artefactosAlmacenados = artefactosAlmacenados + conjunto
     }
 
     method artefactosAlmacenados() { return artefactosAlmacenados }
  
+    method artefactoMasPoderoso() {
+        return artefactosAlmacenados.filter({ artefacto1, artefacto2 => artefacto1.poderDePelea() > artefacto2.poderDePelea() })
+    }
  }
 
 object espadaDelDestino {
@@ -77,21 +83,20 @@ object espadaDelDestino {
 
 object libroDeHechizos {
     var portador = rolando
-    var hechizos = [self.bendicion(), self.invisibilidad(), self.invocacion()]
-
-    method bendicion() { return 4 }
-
-    method invisibilidad() { return portador.poderDePelea() }
-
-    method invocacion() {
-        return //filtrar 
-    }
+    var hechizos = [bendicion, invisibilidad, invocacion]
 
     method poderDePelea() {
-        return 0
+        hechizos.first().usuario(portador)
+        
+        return hechizos.first().poderDePelea()
+        hechizos.remove(hechizos.first())
     }
 
     method portador(_portador) { portador = _portador }
+
+    method hechizos(_hechizos) {
+        hechizos = _hechizos
+    }
 }
 
 object collarDivino {
@@ -111,3 +116,29 @@ object armaduraDeAceroValkyrio {
     method portador(_portador) { portador = _portador }
 }
 
+//hechizos
+object bendicion {
+    var usuario = rolando
+
+    method poderDePelea() { return 4 }
+
+    method usuario(_usuario) { usuario = _usuario }
+}
+
+object invisibilidad {
+    var usuario = rolando
+
+    method poderDePelea() { return usuario.poderDePelea() }
+
+    method usuario(_usuario) { usuario = _usuario }
+}
+
+object invocacion {
+    var usuario = rolando
+
+    method poderDePelea() {
+        return usuario.artefactoMasPoderosoEnPosesion().poderDePelea()
+    }
+
+    method usuario(_usuario) { usuario = _usuario }
+}

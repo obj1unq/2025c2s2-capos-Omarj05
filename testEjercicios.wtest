@@ -106,3 +106,15 @@ test "caso de prueba : poder de pelea" {
     rolando.batallar()
     assert.equals(24, rolando.poderDePelea())
 }
+
+test "caso de prueba : libro de hechizos" {
+    rolando.poderBase(5)
+    rolando.recolectarArtefacto(libroDeHechizos)
+    rolando.casa(castilloDePiedra)
+
+    castilloDePiedra.guardarArtefactos(#{espadaDelDestino, armaduraDeAceroValkyrio, collarDivino})
+    libroDeHechizos.hechizos([bendicion, invisibilidad, invocacion])
+
+    assert.equals(4, libroDeHechizos.poderDePelea())
+
+}
