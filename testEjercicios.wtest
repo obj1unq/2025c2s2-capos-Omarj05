@@ -8,7 +8,8 @@ test "caso de prueba : tamaño de la mochila" {
     rolando.recolectarArtefacto(libroDeHechizos)
     assert.equals(#{espadaDelDestino, libroDeHechizos}, rolando.mochila())
 
-    assert.throwsException({rolando.recolectarArtefacto(collarDivino)})
+    rolando.recolectarArtefacto(collarDivino)
+    assert.equals(#{espadaDelDestino, libroDeHechizos}, rolando.mochila())
 
     assert.equals(#{espadaDelDestino, libroDeHechizos}, rolando.mochila())
 

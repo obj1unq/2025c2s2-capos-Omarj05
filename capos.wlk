@@ -1,6 +1,6 @@
 object rolando {
     const mochila = #{}
-    var capacidadMochila = 2
+    var property capacidadMochila = 2
     var casa = castilloDePiedra //es bueno tener como una seleccion para ciertas cosas
     const artefactosEncontrados = []
     var property poderBase = 5
@@ -19,27 +19,22 @@ object rolando {
         return mochila.sum( {artefacto => artefacto.poderDePelea()} )
     }
 
-    method recolectarArtefacto(artefacto) {
-        self.validarRecoleccion()
-        mochila.add(artefacto)
-        artefacto.portador(self)
-    }
-
     method encontrarArtefacto(artefacto) {
         artefactosEncontrados.add(artefacto)
+        artefacto.portador(self)
+
+        self.recolectarArtefacto(artefacto)
+    }
+
+    method recolectarArtefacto(artefacto) {
+        if (self.mochila().size() < self.capacidadMochila()) {
+            mochila.add(artefacto)
+        }
     }
 
     method historialDeArtefactosEncontrados() { return artefactosEncontrados }
 
-    method capacidadMochila(tamaño) { capacidadMochila = tamaño }
-
     method mochila() { return mochila }
-
-    method validarRecoleccion() {
-        if (mochila.size() == capacidadMochila) {
-            self.error("La mochila está llena.")
-        }
-    }
 
     method casa(_casa) { casa = _casa }
     method batallas() { return batallas }
@@ -82,6 +77,15 @@ object espadaDelDestino {
 
 object libroDeHechizos {
     var portador = rolando
+    var hechizos = [self.bendicion(), self.invisibilidad(), self.invocacion()]
+
+    method bendicion() { return 4 }
+
+    method invisibilidad() { return portador.poderDePelea() }
+
+    method invocacion() {
+        return //filtrar 
+    }
 
     method poderDePelea() {
         return 0
