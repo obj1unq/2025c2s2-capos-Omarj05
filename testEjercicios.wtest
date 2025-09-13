@@ -50,33 +50,58 @@ test "caso de prueba : posesiones de rolando y buscar artefacto" {
     
 }
 
-test "caso de prueba : historial de artefactos encontrados" {
-    rolando.encontrarArtefacto(espadaDelDestino)
+test "caso de prueba : batalla de rolando" {
+    rolando.poderBase(5)
+    rolando.capacidadMochila(3)
+    
     rolando.recolectarArtefacto(espadaDelDestino)
-    assert.equals(#{espadaDelDestino}, rolando.mochila())
+    assert.equals(5, espadaDelDestino.poderDePelea())
 
-    rolando.encontrarArtefacto(libroDeHechizos)
-    rolando.recolectarArtefacto(libroDeHechizos)
-    assert.equals(#{espadaDelDestino, libroDeHechizos}, rolando.mochila())
-
-    rolando.encontrarArtefacto(collarDivino)
-    assert.notThat(rolando.mochila().contains(collarDivino))
-
-    rolando.irACasa()
-    assert.equals(#{espadaDelDestino, libroDeHechizos}, castilloDePiedra.artefactosAlmacenados())
-    assert.equals(#{}, rolando.mochila())
-
-    rolando.encontrarArtefacto(armaduraDeAceroValkyrio)
     rolando.recolectarArtefacto(armaduraDeAceroValkyrio)
-    assert.that(rolando.mochila().contains(armaduraDeAceroValkyrio))
+    assert.equals(6, armaduraDeAceroValkyrio.poderDePelea())
 
-    rolando.encontrarArtefacto(collarDivino)
     rolando.recolectarArtefacto(collarDivino)
-    assert.equals(#{armaduraDeAceroValkyrio, collarDivino}, rolando.mochila())
+    assert.equals(3, collarDivino.poderDePelea())
 
-    assert.equals(
-        [espadaDelDestino, libroDeHechizos, collarDivino, armaduraDeAceroValkyrio, collarDivino], 
-        rolando.historialDeArtefactosEncontrados()
-        )
+    rolando.batallar()
+    assert.equals(6, rolando.poderBase())   
+    assert.equals(3, espadaDelDestino.poderDePelea())        
+    assert.equals(6, armaduraDeAceroValkyrio.poderDePelea()) 
+    assert.equals(4, collarDivino.poderDePelea())            // preguntar poderDePelea = 3 en la 1° batalla
+     
+    rolando.batallar()
+    assert.equals(7, rolando.poderBase())
+    assert.equals(3.5, espadaDelDestino.poderDePelea())
+    assert.equals(6, armaduraDeAceroValkyrio.poderDePelea())
+    assert.equals(5, collarDivino.poderDePelea())
+
+    rolando.batallar()
+    assert.equals(8, rolando.poderBase())
+    assert.equals(4, espadaDelDestino.poderDePelea())
+    assert.equals(6, armaduraDeAceroValkyrio.poderDePelea())
+    assert.equals(6, collarDivino.poderDePelea())
 }
 
+test "caso de prueba : poder de pelea" {
+    assert.equals(5, rolando.poderBase())
+    rolando.capacidadMochila(3)
+    rolando.recolectarArtefacto(espadaDelDestino)
+    assert.equals(5, espadaDelDestino.poderDePelea())
+
+    rolando.recolectarArtefacto(armaduraDeAceroValkyrio)
+    assert.equals(6, armaduraDeAceroValkyrio.poderDePelea())
+
+    rolando.recolectarArtefacto(collarDivino)
+    assert.equals(3, collarDivino.poderDePelea())
+
+    assert.equals(19, rolando.poderDePelea())
+
+    rolando.batallar()
+    assert.equals(19, rolando.poderDePelea())
+
+    rolando.batallar()
+    assert.equals(21.5, rolando.poderDePelea())
+
+    rolando.batallar()
+    assert.equals(24, rolando.poderDePelea())
+}
