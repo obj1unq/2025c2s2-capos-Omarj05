@@ -2,11 +2,18 @@ object rolando {
     const mochila = #{}
     var capacidadMochila = 2
     var casa = castilloDePiedra //es bueno tener como una seleccion para ciertas cosas
+    const artefactosEncontrados = []
 
     method recolectarArtefacto(artefacto) {
         self.validarRecoleccion()
         mochila.add(artefacto)
     }
+
+    method encontrarArtefacto(artefacto) {
+        artefactosEncontrados.add(artefacto)
+    }
+
+    method historialDeArtefactosEncontrados() { return artefactosEncontrados }
 
     method capacidadMochila(tamaño) { capacidadMochila = tamaño }
 

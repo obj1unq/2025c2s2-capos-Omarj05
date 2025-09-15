@@ -49,3 +49,34 @@ test "caso de prueba : posesiones de rolando y buscar artefacto" {
     assert.equals(#{espadaDelDestino, libroDeHechizos, collarDivino}, rolando.todasLasPosesiones())
     
 }
+
+test "caso de prueba : historial de artefactos encontrados" {
+    rolando.encontrarArtefacto(espadaDelDestino)
+    rolando.recolectarArtefacto(espadaDelDestino)
+    assert.equals(#{espadaDelDestino}, rolando.mochila())
+
+    rolando.encontrarArtefacto(libroDeHechizos)
+    rolando.recolectarArtefacto(libroDeHechizos)
+    assert.equals(#{espadaDelDestino, libroDeHechizos}, rolando.mochila())
+
+    rolando.encontrarArtefacto(collarDivino)
+    assert.notThat(rolando.mochila().contains(collarDivino))
+
+    rolando.irACasa()
+    assert.equals(#{espadaDelDestino, libroDeHechizos}, castilloDePiedra.artefactosAlmacenados())
+    assert.equals(#{}, rolando.mochila())
+
+    rolando.encontrarArtefacto(armaduraDeAceroValkyrio)
+    rolando.recolectarArtefacto(armaduraDeAceroValkyrio)
+    assert.that(rolando.mochila().contains(armaduraDeAceroValkyrio))
+
+    rolando.encontrarArtefacto(collarDivino)
+    rolando.recolectarArtefacto(collarDivino)
+    assert.equals(#{armaduraDeAceroValkyrio, collarDivino}, rolando.mochila())
+
+    assert.equals(
+        [espadaDelDestino, libroDeHechizos, collarDivino, armaduraDeAceroValkyrio, collarDivino], 
+        rolando.historialDeArtefactosEncontrados()
+        )
+}
+
