@@ -7,8 +7,15 @@ object rolando {
     var batallas = 0
 
     method batallar() {
+        self.verificarContenidoEnMochila() //no se si esta bien 
         batallas += 1
         poderBase += 1
+    }
+
+    method verificarContenidoEnMochila() {
+        if (mochila.contains(libroDeHechizos)) {
+            libroDeHechizos.removerHechizoActual()
+        }
     }
 
     method poderDePelea() {
@@ -19,13 +26,9 @@ object rolando {
         return mochila.sum( {artefacto => artefacto.poderDePelea()} )
     }
 
-    method encontrarArtefacto(artefacto) {
-        artefactosEncontrados.add(artefacto)
-
-        self.recolectarArtefacto(artefacto)
-    }
-
     method recolectarArtefacto(artefacto) {
+        artefactosEncontrados.add(artefacto)
+        
         if (self.mochila().size() < self.capacidadMochila()) {
             artefacto.portador(self)
             mochila.add(artefacto)
@@ -47,7 +50,7 @@ object rolando {
         return mochila + casa.artefactosAlmacenados()
     }
 
-    method tieneArtefacto(artefacto) {
+    method poseeArtefacto(artefacto) {
         return self.todasLasPosesiones().contains(artefacto)
     }
 
@@ -66,7 +69,12 @@ object castilloDePiedra {
     method artefactosAlmacenados() { return artefactosAlmacenados }
  
     method artefactoMasPoderoso() {
-        return artefactosAlmacenados.filter({ artefacto1, artefacto2 => artefacto1.poderDePelea() > artefacto2.poderDePelea() })
+        const artefactosOrdenadosPorPoderDePelea = artefactosAlmacenados.asList()
+        artefactosOrdenadosPorPoderDePelea.sortBy({ 
+            artefacto1, artefacto2 => artefacto1.poderDePelea() > artefacto2.poderDePelea() 
+        })
+        
+        return artefactosOrdenadosPorPoderDePelea.first()
     }
  }
 
@@ -86,17 +94,27 @@ object libroDeHechizos {
     var hechizos = [bendicion, invisibilidad, invocacion]
 
     method poderDePelea() {
-        hechizos.first().usuario(portador)
-        
-        return hechizos.first().poderDePelea()
-        hechizos.remove(hechizos.first())
+        return if (self.tieneHechizos()) { hechizos.first().poderDePelea() } else { 0 }
     }
 
-    method portador(_portador) { portador = _portador }
+    method portador(_portador) { 
+        portador = _portador 
+        hechizos.forEach({ hechizo => hechizo.usuario(_portador) })
+    }
 
     method hechizos(_hechizos) {
         hechizos = _hechizos
     }
+
+    method removerHechizoActual() {
+        if (self.tieneHechizos()) {
+            hechizos.remove(hechizos.first())
+        }
+    }
+
+    method tieneHechizos() { return not (hechizos == []) }
+
+    method hechizos() { return hechizos }
 }
 
 object collarDivino {

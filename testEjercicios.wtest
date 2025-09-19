@@ -42,8 +42,8 @@ test "caso de prueba : posesiones de rolando y buscar artefacto" {
     
     assert.equals(#{espadaDelDestino, libroDeHechizos}, castilloDePiedra.artefactosAlmacenados())
     assert.equals(#{}, rolando.mochila())
-    assert.that(rolando.tieneArtefacto(espadaDelDestino))
-    assert.that(rolando.tieneArtefacto(libroDeHechizos))
+    assert.that(rolando.poseeArtefacto(espadaDelDestino))
+    assert.that(rolando.poseeArtefacto(libroDeHechizos))
 
     rolando.recolectarArtefacto(collarDivino)
     rolando.irACasa()
@@ -115,6 +115,29 @@ test "caso de prueba : libro de hechizos" {
     castilloDePiedra.guardarArtefactos(#{espadaDelDestino, armaduraDeAceroValkyrio, collarDivino})
     libroDeHechizos.hechizos([bendicion, invisibilidad, invocacion])
 
-    assert.equals(4, libroDeHechizos.poderDePelea())
+    assert.equals(4, libroDeHechizos.poderDePelea()) // pre batalla first() = bendicion (poder = 4)
+    assert.equals(bendicion, libroDeHechizos.hechizos().first())
 
+    rolando.batallar()
+    assert.equals(invisibilidad, libroDeHechizos.hechizos().first())
+    //assert.equals(6, libroDeHechizos.poderDePelea()) // 1° batalla first() = invisibilidad (poder rolando = 5 +1)
+
+    rolando.batallar()
+    assert.equals(invocacion, libroDeHechizos.hechizos().first())
+    assert.equals(6, libroDeHechizos.poderDePelea()) // 2° batalla first() = invocacion (armadura = 6 )
+
+    rolando.batallar()
+    assert.equals([], libroDeHechizos.hechizos())
+    assert.equals(0, libroDeHechizos.poderDePelea()) // 3° batalla first() = [] => 0
+}
+
+test "artefacto mas poderoso" {
+    rolando.poderBase(5)
+    rolando.recolectarArtefacto(libroDeHechizos)
+    rolando.casa(castilloDePiedra)
+
+    castilloDePiedra.guardarArtefactos(#{espadaDelDestino, armaduraDeAceroValkyrio, collarDivino})
+    libroDeHechizos.hechizos([bendicion, invisibilidad, invocacion])
+
+    assert.equals(armaduraDeAceroValkyrio, castilloDePiedra.artefactoMasPoderoso())
 }
