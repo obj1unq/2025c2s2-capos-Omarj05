@@ -1,0 +1,192 @@
+import capos.*
+
+test "caso de prueba : tamaño de la mochila" {
+    rolando.recolectarArtefacto(espadaDelDestino)
+    assert.equals(#{espadaDelDestino}, rolando.mochila())
+    
+    
+    rolando.recolectarArtefacto(libroDeHechizos)
+    assert.equals(#{espadaDelDestino, libroDeHechizos}, rolando.mochila())
+
+    rolando.recolectarArtefacto(collarDivino)
+    assert.equals(#{espadaDelDestino, libroDeHechizos}, rolando.mochila())
+
+    assert.equals(#{espadaDelDestino, libroDeHechizos}, rolando.mochila())
+
+}
+
+test "caso de prueba : guardar objetos en el castillo de piedra" {
+    rolando.recolectarArtefacto(espadaDelDestino)
+    rolando.recolectarArtefacto(libroDeHechizos)
+
+    rolando.irACasa()
+    assert.equals(#{}, rolando.mochila())
+    assert.equals(
+        #{espadaDelDestino, libroDeHechizos}, 
+        castilloDePiedra.artefactosAlmacenados())
+
+    rolando.recolectarArtefacto(collarDivino)
+    assert.equals(#{collarDivino}, rolando.mochila())
+
+    rolando.irACasa()
+    assert.equals(#{}, rolando.mochila())
+    assert.equals(
+        #{espadaDelDestino, libroDeHechizos, collarDivino}, 
+        castilloDePiedra.artefactosAlmacenados())
+}
+
+test "caso de prueba : posesiones de rolando y buscar artefacto" {
+    rolando.recolectarArtefacto(espadaDelDestino)
+    rolando.recolectarArtefacto(libroDeHechizos)
+    rolando.irACasa()
+    
+    assert.equals(#{espadaDelDestino, libroDeHechizos}, castilloDePiedra.artefactosAlmacenados())
+    assert.equals(#{}, rolando.mochila())
+    assert.that(rolando.poseeArtefacto(espadaDelDestino))
+    assert.that(rolando.poseeArtefacto(libroDeHechizos))
+
+    rolando.recolectarArtefacto(collarDivino)
+    rolando.irACasa()
+    assert.equals(#{espadaDelDestino, libroDeHechizos, collarDivino}, rolando.todasLasPosesiones())
+    
+}
+
+test "caso de prueba : batalla de rolando" {
+    rolando.poderBase(5)
+    rolando.capacidadMochila(3)
+    
+    rolando.recolectarArtefacto(espadaDelDestino)
+    assert.equals(5, espadaDelDestino.poderDePelea())
+
+    rolando.recolectarArtefacto(armaduraDeAceroValkyrio)
+    assert.equals(6, armaduraDeAceroValkyrio.poderDePelea())
+
+    rolando.recolectarArtefacto(collarDivino)
+    assert.equals(3, collarDivino.poderDePelea())
+
+    rolando.batallar()
+    assert.equals(6, rolando.poderBase())   
+    assert.equals(3, espadaDelDestino.poderDePelea())        
+    assert.equals(6, armaduraDeAceroValkyrio.poderDePelea()) 
+    assert.equals(4, collarDivino.poderDePelea())            // preguntar poderDePelea = 3 en la 1° batalla
+     
+    rolando.batallar()
+    assert.equals(7, rolando.poderBase())
+    assert.equals(3.5, espadaDelDestino.poderDePelea())
+    assert.equals(6, armaduraDeAceroValkyrio.poderDePelea())
+    assert.equals(5, collarDivino.poderDePelea())
+
+    rolando.batallar()
+    assert.equals(8, rolando.poderBase())
+    assert.equals(4, espadaDelDestino.poderDePelea())
+    assert.equals(6, armaduraDeAceroValkyrio.poderDePelea())
+    assert.equals(6, collarDivino.poderDePelea())
+}
+
+test "caso de prueba : poder de pelea" {
+    assert.equals(5, rolando.poderBase())
+    rolando.capacidadMochila(3)
+    rolando.recolectarArtefacto(espadaDelDestino)
+    assert.equals(5, espadaDelDestino.poderDePelea())
+
+    rolando.recolectarArtefacto(armaduraDeAceroValkyrio)
+    assert.equals(6, armaduraDeAceroValkyrio.poderDePelea())
+
+    rolando.recolectarArtefacto(collarDivino)
+    assert.equals(3, collarDivino.poderDePelea())
+
+    assert.equals(19, rolando.poderDePelea())
+
+    rolando.batallar()
+    assert.equals(19, rolando.poderDePelea())
+
+    rolando.batallar()
+    assert.equals(21.5, rolando.poderDePelea())
+
+    rolando.batallar()
+    assert.equals(24, rolando.poderDePelea())
+}
+
+test "caso de prueba : libro de hechizos" {
+    rolando.poderBase(5)
+    rolando.recolectarArtefacto(libroDeHechizos)
+    rolando.casa(castilloDePiedra)
+
+    castilloDePiedra.guardarArtefactos(#{espadaDelDestino, armaduraDeAceroValkyrio, collarDivino})
+    libroDeHechizos.hechizos([bendicion, invisibilidad, invocacion])
+
+    assert.equals(4, libroDeHechizos.poderDePelea()) // pre batalla first() = bendicion (poder = 4)
+    assert.equals(bendicion, libroDeHechizos.hechizos().first())
+
+    rolando.batallar()
+    assert.equals(invisibilidad, libroDeHechizos.hechizos().first())
+    //assert.equals(6, libroDeHechizos.poderDePelea()) // 1° batalla first() = invisibilidad (poder rolando = 5 +1)
+
+    rolando.batallar()
+    assert.equals(invocacion, libroDeHechizos.hechizos().first())
+    assert.equals(6, libroDeHechizos.poderDePelea()) // 2° batalla first() = invocacion (armadura = 6 )
+
+    rolando.batallar()
+    assert.equals([], libroDeHechizos.hechizos())
+    assert.equals(0, libroDeHechizos.poderDePelea()) // 3° batalla first() = [] => 0
+}
+
+test "caso de prueba : artefacto mas poderoso" {
+    rolando.poderBase(5)
+    rolando.recolectarArtefacto(libroDeHechizos)
+    rolando.casa(castilloDePiedra)
+
+    castilloDePiedra.guardarArtefactos(#{espadaDelDestino, armaduraDeAceroValkyrio, collarDivino})
+    libroDeHechizos.hechizos([bendicion, invisibilidad, invocacion])
+
+    assert.equals(armaduraDeAceroValkyrio, castilloDePiedra.artefactoMasPoderoso())
+}
+test "caso de prueba : enemigos y moradas" {
+    rolando.poderBase(5)
+    rolando.capacidadMochila(3)
+    rolando.recolectarArtefacto(espadaDelDestino)
+    rolando.recolectarArtefacto(armaduraDeAceroValkyrio)
+    rolando.recolectarArtefacto(collarDivino)
+    
+    assert.equals(#{espadaDelDestino, armaduraDeAceroValkyrio, collarDivino}, rolando.mochila())
+    assert.equals(19, rolando.poderDePelea())
+    
+    assert.that(archibaldo.puedeSerDerrotadoPorPersonaje(rolando))
+    assert.that(astra.puedeSerDerrotadoPorPersonaje(rolando))
+    assert.equals(#{archibaldo, astra}, rolando.enemigosDerrotables())
+
+    assert.equals([palacioDeMarmol, torreDeMarfil], rolando.moradasConquistables())
+}
+
+test "test : rolando es poderoso" {
+    rolando.poderBase(30)
+
+    assert.that(rolando.esPoderoso())
+}
+
+test "caso de prueba : artefacto fatal" {
+    rolando.poderBase(5)
+
+    rolando.recolectarArtefacto(espadaDelDestino)
+    rolando.recolectarArtefacto(armaduraDeAceroValkyrio)
+
+    assert.notThat(rolando.tieneArtefactoFatalParaEnemigo(caterina))
+    assert.notThat(rolando.tieneArtefactoFatalParaEnemigo(archibaldo))
+    assert.notThat(rolando.tieneArtefactoFatalParaEnemigo(astra))
+
+    rolando.batallar() 
+    rolando.poderBase(28)
+
+    assert.that(rolando.tieneArtefactoFatalParaEnemigo(astra))
+    assert.equals(espadaDelDestino, rolando.artefactoFatalParaEnemigo(astra))
+    
+    rolando.poderBase(32)
+    
+    assert.that(rolando.tieneArtefactoFatalParaEnemigo(archibaldo))
+    assert.equals(espadaDelDestino, rolando.artefactoFatalParaEnemigo(archibaldo))
+
+    rolando.poderBase(56) 
+
+    assert.that(rolando.tieneArtefactoFatalParaEnemigo(caterina))
+    assert.equals(espadaDelDestino, rolando.artefactoFatalParaEnemigo(caterina))
+}
