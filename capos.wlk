@@ -59,12 +59,19 @@ object rolando {
     }
 
     method enemigosDerrotables() {
-        return #{caterina, archibaldo, astra}.filter({enemigo => enemigo.puedeSerDerrotadoPorPersonaje(self)})
+        return self.enemigosCombatibles().filter({enemigo => enemigo.puedeSerDerrotadoPorPersonaje(self)})
     }
 
     method moradasConquistables() {
         return self.enemigosDerrotables().map({ enemigo => enemigo.morada() })
     } 
+
+    method esPoderoso() {
+        return self.enemigosDerrotables() == self.enemigosCombatibles()
+
+    }
+
+    method enemigosCombatibles() { return #{caterina, archibaldo, astra} }
 }
 
 object castilloDePiedra {

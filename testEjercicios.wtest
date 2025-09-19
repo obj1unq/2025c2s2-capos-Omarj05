@@ -157,3 +157,9 @@ test "caso de prueba : enemigos y moradas" {
 
     assert.equals([palacioDeMarmol, torreDeMarfil], rolando.moradasConquistables())
 }
+
+test "rolando es poderoso" {
+    rolando.poderBase(30)
+
+    assert.that(rolando.esPoderoso())
+}
