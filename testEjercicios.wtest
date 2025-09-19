@@ -131,7 +131,7 @@ test "caso de prueba : libro de hechizos" {
     assert.equals(0, libroDeHechizos.poderDePelea()) // 3° batalla first() = [] => 0
 }
 
-test "artefacto mas poderoso" {
+test "caso de prueba : artefacto mas poderoso" {
     rolando.poderBase(5)
     rolando.recolectarArtefacto(libroDeHechizos)
     rolando.casa(castilloDePiedra)
@@ -158,8 +158,35 @@ test "caso de prueba : enemigos y moradas" {
     assert.equals([palacioDeMarmol, torreDeMarfil], rolando.moradasConquistables())
 }
 
-test "rolando es poderoso" {
+test "test : rolando es poderoso" {
     rolando.poderBase(30)
 
     assert.that(rolando.esPoderoso())
+}
+
+test "caso de prueba : artefacto fatal" {
+    rolando.poderBase(5)
+
+    rolando.recolectarArtefacto(espadaDelDestino)
+    rolando.recolectarArtefacto(armaduraDeAceroValkyrio)
+
+    assert.notThat(rolando.tieneArtefactoFatalParaEnemigo(caterina))
+    assert.notThat(rolando.tieneArtefactoFatalParaEnemigo(archibaldo))
+    assert.notThat(rolando.tieneArtefactoFatalParaEnemigo(astra))
+
+    rolando.batallar() 
+    rolando.poderBase(28)
+
+    assert.that(rolando.tieneArtefactoFatalParaEnemigo(astra))
+    assert.equals(espadaDelDestino, rolando.artefactoFatalParaEnemigo(astra))
+    
+    rolando.poderBase(32)
+    
+    assert.that(rolando.tieneArtefactoFatalParaEnemigo(archibaldo))
+    assert.equals(espadaDelDestino, rolando.artefactoFatalParaEnemigo(archibaldo))
+
+    rolando.poderBase(56) 
+
+    assert.that(rolando.tieneArtefactoFatalParaEnemigo(caterina))
+    assert.equals(espadaDelDestino, rolando.artefactoFatalParaEnemigo(caterina))
 }

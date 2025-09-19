@@ -72,6 +72,20 @@ object rolando {
     }
 
     method enemigosCombatibles() { return #{caterina, archibaldo, astra} }
+
+    method tieneArtefactoFatalParaEnemigo(enemigo) {
+        return mochila.any({ artefacto => artefacto.esFatalParaEnemigo(enemigo) })
+    }
+
+    method artefactoFatalParaEnemigo(enemigo) {
+        if (self.tieneArtefactoFatalParaEnemigo(enemigo)) {
+            
+            return mochila.filter({ artefacto => artefacto.esFatalParaEnemigo(enemigo) }).anyOne()
+        }
+        else {
+            return "No posee un artefacto fatal para dicho enemigo."
+        }
+    }
 }
 
 object castilloDePiedra {
@@ -102,6 +116,10 @@ object espadaDelDestino {
     }
 
     method portador(_portador) { portador = _portador }
+
+    method esFatalParaEnemigo(enemigo) {
+        return self.poderDePelea() >= enemigo.poderDePelea()
+    }
 }
 
 object libroDeHechizos {
@@ -127,6 +145,10 @@ object libroDeHechizos {
         }
     }
 
+    method esFatalParaEnemigo(enemigo) {
+        return self.poderDePelea() >= enemigo.poderDePelea()
+    }
+
     method tieneHechizos() { return not (hechizos == []) }
 
     method hechizos() { return hechizos }
@@ -140,13 +162,21 @@ object collarDivino {
     }
 
     method portador(_portador) { portador = _portador }
+
+    method esFatalParaEnemigo(enemigo) {
+        return self.poderDePelea() >= enemigo.poderDePelea()
+    }
 }
 
 object armaduraDeAceroValkyrio {
     var portador = rolando
     const property poderDePelea = 6
-
+    
     method portador(_portador) { portador = _portador }
+
+    method esFatalParaEnemigo(enemigo) {
+        return self.poderDePelea() >= enemigo.poderDePelea()
+    }
 }
 
 //hechizos
