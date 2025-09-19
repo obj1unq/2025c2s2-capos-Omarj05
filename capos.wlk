@@ -57,6 +57,14 @@ object rolando {
     method artefactoMasPoderosoEnPosesion() {
         return casa.artefactoMasPoderoso()
     }
+
+    method enemigosDerrotables() {
+        return #{caterina, archibaldo, astra}.filter({enemigo => enemigo.puedeSerDerrotadoPorPersonaje(self)})
+    }
+
+    method moradasConquistables() {
+        return self.enemigosDerrotables().map({ enemigo => enemigo.morada() })
+    } 
 }
 
 object castilloDePiedra {
@@ -159,4 +167,42 @@ object invocacion {
     }
 
     method usuario(_usuario) { usuario = _usuario }
+}
+
+//enemigos
+object caterina {
+    const property poderDePelea = 28
+    const property morada = fortalezaDeAcero
+
+    method puedeSerDerrotadoPorPersonaje(personaje) {
+        return personaje.poderDePelea() > self.poderDePelea()
+    }
+}
+
+object archibaldo {
+    const property poderDePelea = 16
+    const property morada = palacioDeMarmol
+
+    method puedeSerDerrotadoPorPersonaje(personaje) {
+        return personaje.poderDePelea() > self.poderDePelea()
+    }
+}
+
+object astra {
+    const property poderDePelea = 14
+    const property morada = torreDeMarfil
+
+    method puedeSerDerrotadoPorPersonaje(personaje) {
+        return personaje.poderDePelea() > self.poderDePelea()
+    }
+}
+
+//morada de enemigos
+object fortalezaDeAcero {
+}
+
+object palacioDeMarmol {
+}
+
+object torreDeMarfil {
 }

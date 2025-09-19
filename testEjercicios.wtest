@@ -141,3 +141,19 @@ test "artefacto mas poderoso" {
 
     assert.equals(armaduraDeAceroValkyrio, castilloDePiedra.artefactoMasPoderoso())
 }
+test "caso de prueba : enemigos y moradas" {
+    rolando.poderBase(5)
+    rolando.capacidadMochila(3)
+    rolando.recolectarArtefacto(espadaDelDestino)
+    rolando.recolectarArtefacto(armaduraDeAceroValkyrio)
+    rolando.recolectarArtefacto(collarDivino)
+    
+    assert.equals(#{espadaDelDestino, armaduraDeAceroValkyrio, collarDivino}, rolando.mochila())
+    assert.equals(19, rolando.poderDePelea())
+    
+    assert.that(archibaldo.puedeSerDerrotadoPorPersonaje(rolando))
+    assert.that(astra.puedeSerDerrotadoPorPersonaje(rolando))
+    assert.equals(#{archibaldo, astra}, rolando.enemigosDerrotables())
+
+    assert.equals([palacioDeMarmol, torreDeMarfil], rolando.moradasConquistables())
+}
